@@ -1,8 +1,8 @@
-import pandas as pd
 import yfinance as yf
 import matplotlib.pyplot as plt
+import pandas as pd
 
-def get_historical_data(ticker, start_date, end_date, interval='1d'):
+def get_entry_data(ticker, start_date, end_date, interval='1d'):
     data = yf.download(ticker, start=start_date, end=end_date, interval=interval)
     return data
 
@@ -28,7 +28,7 @@ def calculate_entry_points(data):
     data['UpperBand'], data['LowerBand'] = calculate_bollinger_bands(data)
 
     # 上位足のデータを取得し、1日足のindexにリサンプリング
-    higher_timeframe_data = get_historical_data('SOXL', '2021-01-01', '2023-08-01', interval='5d')  # 上位足（例：週足）のデータを取得
+    higher_timeframe_data = get_entry_data('SOXL', '2021-01-01', '2023-08-01', interval='5d')  # 上位足（例：週足）のデータを取得
     higher_timeframe_data = higher_timeframe_data.reindex(data.index, method='ffill')
 
     # 上位足のEMAを1日足のデータにリサンプリング
@@ -63,7 +63,7 @@ def main():
     ticker = 'SOXL'
     start_date = '2021-01-01'
     end_date = '2023-08-01'
-    historical_data = get_historical_data(ticker, start_date, end_date)
+    historical_data = get_entry_data(ticker, start_date, end_date)
 
     # エントリーポイントを計算
     entry_points_data = calculate_entry_points(historical_data)
